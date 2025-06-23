@@ -22,7 +22,7 @@
 
 import requests
 import pandas as pd
-from os.path import exists
+import os
 from time import sleep
 
 ###################################################
@@ -59,10 +59,11 @@ while attempts <= 10 and success == False:
         i       = 3 # Data ranges from tables 4-6
         
         # Create three DataFrames: QAM, Upload, and OFDM
-        df_dict = {'df_qam_channel_status':    pd.DataFrame(),
-                   'df_upload_channel_status': pd.DataFrame(),
-                   'df_ofdm_channel_status':   pd.DataFrame()
-                  }
+        df_dict = {
+            'df_qam_channel_status':    pd.DataFrame(),
+            'df_upload_channel_status': pd.DataFrame(),
+            'df_ofdm_channel_status':   pd.DataFrame()
+        }
         
         # Pull each table and save it to a dict with the timestamp
         for df in df_dict:
@@ -79,12 +80,18 @@ while attempts <= 10 and success == False:
             # for upload. The try block takes care of this.
             for col in ['Power', 'SNR / MER']:
                 try:
-                    df_dict[df][col] = df_dict[df][col].str.extract('(\d+\.\d+)').astype('float')
+                    df_dict[df][col] = (
+                        df_dict[df][col].str.extract('(\d+\.\d+)')
+                                        .astype('float')
+                    )
                 except:
                     pass
         
             # Store frequency as an int
-            df_dict[df]['Frequency'] = df_dict[df]['Frequency'].str.extract('(\d+)').astype('int')
+            df_dict[df]['Frequency'] = (
+                df_dict[df]['Frequency'].str.extract('(\d+)')
+                                        .astype('int')
+            )
             
             # Rename columns to be more logical
             df_dict[df] = df_dict[df].rename(columns={'Frequency': 'frequency_hz',
@@ -94,20 +101,25 @@ while attempts <= 10 and success == False:
                                             )
             
             #Standardize the rest of the index/column names
-            df_dict[df].columns    = df_dict[df].columns.str.strip() \
-                                                        .str.lower() \
-                                                        .str.replace(' ', '_')
-                                   
-            df_dict[df].index.name = df_dict[df].index.name.strip() \
-                                                .lower() \
-                                                .replace(' ', '_')
+            df_dict[df].columns = (
+                df_dict[df].columns.str.strip()
+                                   .str.lower()
+                                   .str.replace(' ', '_')
+            )
+
+            df_dict[df].index.name = (
+                df_dict[df].index.name.strip()
+                                      .lower()
+                                      .replace(' ', '_')
+            )
             
             print('Saving ' + df + ' to csv...')
             
-            outfile = outfolder + '\\' + df + '.csv'
+            outfile = os.path.join(outfolder, df + '.csv')
+            
             
             # Do not add a header if the file exists
-            header = False if exists(outfile) else True
+            header = False if os.path.exists(outfile) else True
                 
             df_dict[df].to_csv(outfile, float_format='%.1f', mode='a', header=header)
                 

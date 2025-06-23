@@ -32,7 +32,7 @@ from time import sleep
 url       = 'http://192.168.100.1/DocsisStatus.asp'
 user      = 'admin'
 pw        = 'admin'
-outfolder = "B:\\Data\\cm1k-scraper" # Do not include ending \\
+outfolder = r"/location/here" # Do not include ending /
 
 ###################################################
 #################### Begin ########################

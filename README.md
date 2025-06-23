@@ -15,6 +15,6 @@ channels.
 
 | Output    | Description |
 | --------- | ----------- |
-| df_qam_channel_statusl.csv    | QAM channel status table    |
+| df_qam_channel_status.csv    | QAM channel status table    |
 | df_upload_channel_status.csv  | Upload channel status table |
 | df_ofdm_channel_status.csv    | OFDM channel status table   |
